@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder {
+class UserSeeder extends Seeder {
 
     /**
      * Run the database seeds.
@@ -10,8 +10,7 @@ class DatabaseSeeder extends Seeder {
      * @return void
      */
     public function run() {
-        //$this->call(RolesSeeder::class);
-        $this->call(UserSeeder::class);
+        App\User::create(['name' => 'Abdou Habibi', 'email' => 'abdou@zwaar.org', 'password' => bcrypt('secret')]);
     }
 
 }

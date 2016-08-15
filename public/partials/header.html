@@ -1,0 +1,28 @@
+<div class="container">
+    <h1 class="logo">
+        <a ng-href="#/">
+            <img alt="Timezone" src="../img/logo.png">
+        </a>
+    </h1>
+    <nav style='margin-bottom: 10px;' ng-show="token">
+        <h5><span ng-bind="user.name"></span>
+            <img style='height:50px;' class='img-circle' ng-src='user.img'></h5>
+    </nav>
+    <nav style='margin-bottom: 10px;' ng-hide="token">
+        <ul class="nav nav-pills nav-main" id="mainMenu">
+            <li><a ng-href="#/login">Login</a></li>
+            <li><a ng-href="#/register"> Register</a></li>
+        </ul>
+    </nav>
+    <div class="social-icons">
+    </div>
+    <nav ng-show="!token">
+        <ul class="nav nav-pills nav-main" id="mainMenu">
+            <li><a ng-href="#/"><i class="icon icon-home"></i> Home</a></li>
+            <li><a ng-href="#/profile"><i class="icon icon-info-sign"></i> Profile</a></li>
+            <li><a ng-href="#/timezones"><i class="icon icon-time"></i> Manage Timezones</a></li>
+            <li><a ng-href="#/users"><i class="icon icon-user"></i> Manage Users</a></li>
+            <li><a href="#/logout"><i class="icon icon-external-link"></i> Logout</a></li>
+        </ul>
+    </nav>
+</div>
