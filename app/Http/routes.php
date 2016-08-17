@@ -13,4 +13,28 @@
 
 //Route::auth();
 
+/*
+ * Home Route
+ */
 Route::get('/', 'TimeZoneController@index');
+
+/*
+ * Authentication & Registration Routes
+ */
+Route::get('check-auth', 'AuthController@check_auth');
+Route::post('login', 'AuthController@login');
+Route::post('register', 'AuthController@register');
+Route::post('check-email', 'AuthController@check_email');
+
+/*
+ * Timezone Management Routes 
+ */
+Route::get('get-timezones/{id?}', 'TimezoneController@get_timezones');
+Route::post('update-timezone/{id}/{user_id?}', 'TimezoneController@update_timezone');
+Route::get('delete-timezone/{id}', 'TimezoneController@delete_timezone');
+
+/*
+ * User Management Routes
+ */
+Route::post('manage/update-user/{id}', 'UserController@update_user');
+Route::get('manage/delete-user/{id}', 'UserController@delete_user');

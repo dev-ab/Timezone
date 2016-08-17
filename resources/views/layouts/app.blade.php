@@ -13,7 +13,6 @@
         <meta name="keywords" content="HTML5 Template" />
         <meta name="description" content="Porto - Responsive HTML5 Template">
         <meta name="author" content="Crivos.com">
-        <meta name="csrf-token" content="{{ csrf_token()}}">
 
         <!-- Mobile Metas -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +25,7 @@
         <link rel="stylesheet" href="{{url('/')}}/css/fonts/font-awesome/css/font-awesome.css">
         <link rel="stylesheet" href="{{url('/')}}/vendor/flexslider/flexslider.css" media="screen" />
         <link rel="stylesheet" href="{{url('/')}}/vendor/fancybox/jquery.fancybox.css" media="screen" />
+        <link rel="stylesheet" href="{{url('/')}}/vendor/pace.css" media="screen" />
 
         <!-- Theme CSS -->
         <link rel="stylesheet" href="{{url('/')}}/css/theme.css">
@@ -79,13 +79,13 @@
             }
         </style>
     </head>
-    <body ng-controller='HomeController'>
+    <body>
 
         <div class="body">
-            <header ng-include="'partials/header.html'">
+            <header ui-view="header">
 
             </header>
-            <div ng-view="">
+            <div ui-view="container">
                 @yield('content')
             </div>
             <footer>
@@ -94,8 +94,8 @@
         </div>
 
         <!-- Libs -->
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{url(' / ')}}/vendor/jquery.js"><\/script>')</script>
+        <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
+        <script src="{{url('/')}}/vendor/jquery.js"></script>
         <script src="{{url('/')}}/vendor/jquery.easing.js"></script>
         <script src="{{url('/')}}/vendor/jquery.cookie.js"></script>
         <!-- <script src="master/style-switcher/style.switcher.js"></script> -->
@@ -106,6 +106,8 @@
         <script src="{{url('/')}}/vendor/jflickrfeed/jflickrfeed.js"></script>
         <script src="{{url('/')}}/vendor/fancybox/jquery.fancybox.js"></script>
         <script src="{{url('/')}}/vendor/jquery.validate.js"></script>
+        <script src="{{url('/')}}/vendor/pace.min.js"></script>
+        <script src="{{url('/')}}/vendor/jquery.noty.packaged.min.js"></script>
 
         <script src="{{url('/')}}/js/plugins.js"></script>
 
@@ -118,13 +120,15 @@
         <script src="{{url('/')}}/js/custom.js"></script>
 
         <script src="{{url('/')}}/scripts/angular.min.js"></script>
-        <script src="{{url('/')}}/scripts/angular-route.min.js"></script>
-        <script src="{{url('/')}}/scripts/ui-bootstrap-tpls.min.js"></script>
+        <script src="{{url('/')}}/lib/angular-ui-router.js"></script>
         <script src="{{url('/')}}/lib/ngStorage.js"></script>
-        <script src="{{url('/')}}/lib/loading-bar.js"></script>
         <script src="{{url('/')}}/lib/angular-clock.js"></script>
         <script src="{{url('/')}}/scripts/app.js"></script>
         <script src="{{url('/')}}/scripts/routes.js"></script>
+        <script src="{{url('/')}}/scripts/services.js"></script>
+        <script src="{{url('/')}}/scripts/controllers/AuthController.js"></script>
+        <script src="{{url('/')}}/scripts/controllers/TimezoneController.js"></script>
+        <script src="{{url('/')}}/scripts/controllers/UserController.js"></script>
         @yield('controller')
 
         <!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information. -->
