@@ -41,7 +41,9 @@ class AuthController extends Controller {
         }
 
         $user = Auth::user();
-        return response()->json(compact('token', 'user'));
+        $roles = $user->roles->pluck('name');
+
+        return response()->json(compact('token', 'user', 'roles'));
     }
 
     /**
@@ -57,7 +59,8 @@ class AuthController extends Controller {
             return response()->json(false);
 
         $user_data['password'] = bcrypt($user_data['password']);
-        \App\User::create($user_data);
+        $user = \App\User::create($user_data);
+        $user->roles()->attach(\App\Role::where('name', 'user')->get()[0]->id);
 
         return response()->json(true);
     }
@@ -69,8 +72,9 @@ class AuthController extends Controller {
      */
     public function check_email(Request $request) {
         $email = $request->input('email');
+        $id = $request->input('id');
 
-        $user = \App\User::where('email', $email)->get();
+        $user = \App\User::where('id', '!=', $id)->where('email', $email)->get();
 
         if ($user->count() > 0)
             return response()->json(false);

@@ -29,12 +29,13 @@ Route::post('check-email', 'AuthController@check_email');
 /*
  * Timezone Management Routes 
  */
-Route::get('get-timezones/{id?}', 'TimezoneController@get_timezones');
-Route::post('update-timezone/{id}/{user_id?}', 'TimezoneController@update_timezone');
+Route::get('get-timezones/{id}', 'TimezoneController@get_timezones');
+Route::post('update-timezone/{id}/{user_id}', 'TimezoneController@update_timezone');
 Route::get('delete-timezone/{id}', 'TimezoneController@delete_timezone');
 
 /*
  * User Management Routes
  */
-Route::post('manage/update-user/{id}', 'UserController@update_user');
-Route::get('manage/delete-user/{id}', 'UserController@delete_user');
+Route::post('update-user/{id}', 'UserController@update_user');
+Route::get('delete-user/{id}', 'UserController@delete_user');
+Route::get('get-users', 'UserController@get_users');

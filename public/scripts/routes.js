@@ -18,6 +18,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
                                 }, function (value) {
                                     $scope.user = value.user;
                                     $scope.token = value.token;
+                                    $scope.roles = value.roles;
                                 }
                                 );
 
@@ -26,6 +27,28 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
                                     Auth.logout()
                                 };
                             }
+                        }
+                    }
+                })
+                //Set up login route and controller
+                .state('root.login', {
+                    url: '/login',
+                    data: {pageTitle: 'Timezone - Login'},
+                    views: {
+                        'container@': {
+                            templateUrl: 'partials/login.html',
+                            controller: 'AuthController'
+                        }
+                    }
+                })
+                //Set up registeration route and controller
+                .state('root.register', {
+                    url: '/register',
+                    data: {pageTitle: 'Timezone - Register'},
+                    views: {
+                        'container@': {
+                            templateUrl: 'partials/register.html',
+                            controller: 'AuthController'
                         }
                     }
                 })
@@ -39,25 +62,37 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
                         }
                     }
                 })
-                //Set up login route and controller
-                .state('root.login', {
-                    url: '/login',
+                //Set up profile route and controller
+                .state('root.account', {
+                    url: '/profile',
+                    data: {pageTitle: 'Timezone - Profile'},
                     views: {
                         'container@': {
-                            templateUrl: 'partials/login.html',
-                            controller: 'AuthController'
+                            templateUrl: 'partials/profile.html',
+                            controller: 'TimezoneController',
                         }
                     }
                 })
-                //Set up registeration route and controller
-                .state('root.register', {
-                    url: '/register',
+                //Set up timezones managing route and controller
+                .state('root.timezone', {
+                    url: '/manage-timezones',
+                    data: {pageTitle: 'Timezone - Timezones Manager'},
                     views: {
                         'container@': {
-                            templateUrl: 'partials/register.html',
-                            controller: 'AuthController'
+                            templateUrl: 'partials/timezone.html',
+                            controller: 'TimezoneController'
+                        }
+                    }
+                })
+                //Set up users managing route and controller
+                .state('root.user', {
+                    url: '/manage-users',
+                    data: {pageTitle: 'Timezone - Users Manager'},
+                    views: {
+                        'container@': {
+                            templateUrl: 'partials/user.html',
+                            controller: 'UserController'
                         }
                     }
                 });
-    }
-]);
+    }]);

@@ -1,7 +1,7 @@
 <div class="container">
     <h1 class="logo">
         <a ng-href="#/">
-            <img alt="Timezone" src="../img/logo.png">
+            <img alt="Timezone" style="height:100px;" src="../img/logo.png">
         </a>
     </h1>
     <nav style='margin-bottom: 10px;' ng-show="token">
@@ -18,10 +18,10 @@
     </div>
     <nav ng-show="token">
         <ul class="nav nav-pills nav-main" id="mainMenu">
-            <li><a ng-href="#/"><i class="icon icon-home"></i> Home</a></li>
-            <li><a ng-href="#/profile"><i class="icon icon-info-sign"></i> Profile</a></li>
-            <li><a ng-href="#/timezones"><i class="icon icon-time"></i> Manage Timezones</a></li>
-            <li><a ng-href="#/users"><i class="icon icon-user"></i> Manage Users</a></li>
+            <li><a ui-sref="root.home"><i class="icon icon-home"></i> Home</a></li>
+            <li><a ui-sref="root.account"><i class="icon icon-info-sign"></i> My Account</a></li>
+            <li ng-show="roles.indexOf('admin') > -1"><a ui-sref="root.timezone"><i class="icon icon-time"></i> Manage Timezones</a></li>
+            <li ng-show="roles.indexOf('admin') > -1 || roles.indexOf('user-manager') > -1"><a ui-sref="root.user"><i class="icon icon-user"></i> Manage Users</a></li>
             <li><a href="javascript:;" ng-click="logout()"><i class="icon icon-external-link"></i> Logout</a></li>
         </ul>
     </nav>

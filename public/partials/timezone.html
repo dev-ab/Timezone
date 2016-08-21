@@ -1,0 +1,115 @@
+<div role="main" class="main">
+    <section class="page-top">
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <ul class="breadcrumb">
+                        <li><a ui-sref="root.home">Home</a> <span class="divider">/</span></li>
+                        <li class="active">Manage Timezones</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h2><i class="icon icon-time"></i> Manage Timezones</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class='row'>
+            <div class="span12">
+                <h5 style='color:#777;' ng-show="user.id">
+                    <div id="clock"><i class="pull-right icon icon-spinner"></i></div>
+                    <span class='pull-right' style='margin-right: 10px;'>GMT TIME: </span>
+                </h5>
+                <h4>Select User To manage timezone for. </h4>
+                <h4> 
+                    <select name='user' ng-model='selectedUser' ng-change="selectUser()">
+                        <option value="">Select User..</option>
+                        <option ng-repeat="u in users" ng-value="u.id" ng-bind="u.name" ng-selected="u.id == selectedUser"></option>
+                    </select>
+                </h4>
+                <div ng-show="user.id">
+                    <h4><a class="btn btn-success" title="Create a timezone" ng-click="addTimezone()">
+                            <i class="icon icon-plus-sign"></i> Create</a></h4>
+                    <h4><input type="text" name='filter' ng-model='search.name' placeholder="Filter by timezone name.."></h4>
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Timezone Name
+                                </th>
+                                <th>
+                                    City Name
+                                </th>
+                                <th>
+                                    GMT Difference
+                                </th>
+                                <th>
+                                    Current Time
+                                </th>
+                                <th>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="t in Timezones = (timezonesArray()| filter:search)">
+                                <td ng-bind="t.id"></td>
+                                <td ng-bind="t.name"></td>
+                                <td ng-bind="t.city_name"></td>
+                                <td ng-bind="t.gmt"></td>
+                                <td><ds-widget-clock  show-digital start-time='getGmtTime(t.gmt_diff)' gmt-offset="'0'" digital-format="'EEEE MMMM d,yyyy hh:mm:ss a'"></ds-widget-clock></td>
+                        <td style="width:200px;">
+                            <a class='btn btn-default' ng-click="editTimezone(t.id)"><i class='icon icon-pencil'></i> Edit</a>
+                            <a class='btn btn-danger' ng-click="deleteTimezone(t.id)"><i class='icon icon-trash'></i> Delete</a>
+                        </td>
+                        </tr>
+                        <tr ng-show="!Timezones.length"><td colspan="6" style="text-align: center;">No timezones data</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+
+    <!-- Management Modals-->
+
+    <div id="timezone" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel"><i class='icon icon-time'></i> Create / Edit Timezone</h3>
+        </div>
+        <div class="modal-body">
+            <form id='timezone_form'>
+                <input type="hidden" ng-model='timezone.id' name='id'>
+                <div class="row controls">
+                    <div class="span3 control-group">
+                        <input type="text" ng-model='timezone.name' name='name' placeholder="Timezone name" class="span3">
+                    </div>
+                    <div class="span3 control-group">
+                        <textarea type="text" ng-model='timezone.city_name' name='city_name' placeholder="City in timezone" class="span3"></textarea>
+                    </div>
+                    <div class="span4 control-group">
+                        <label>GMT Difference: </label>
+                        <select ng-model="timezone.sign" name='sign' class="span1">
+                            <option value="+" ng-selected="timezone.sign == '+'">+</option>
+                            <option value="-" ng-selected="timezone.sign == '-'">-</option>
+                        </select>
+                        <input type="text" class="span1" ng-model="timezone.hour" name='hour' placeholder="Hours">
+                        <input type="text" class="span1" ng-model="timezone.minute" name='minute' placeholder="Minutes">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+            <a class="btn btn-primary" ng-click="saveTimezone()">Save</a>
+        </div>
+    </div>
+</div>

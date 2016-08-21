@@ -1,4 +1,18 @@
 <div role="main" class="main">
+    <section class="page-top custom-product">
+        <div class="container">
+            <div class="row">
+                <div class="span7">
+                    <h1>Introducing <strong>Timezone</strong> manager.</h1>
+                    <p class="lead">Timezone manager helps you create and manage timezones and view the current time in those different timezones.</p>
+                </div>
+                <div class="span5">
+                    <img class="pull-right responsive hidden-phone" style="height: 200px" alt="" src="img/timezone.png">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <div class="container">
         <div class='row'>
             <div class="span12">
@@ -38,13 +52,13 @@
                             <td ng-bind="t.name"></td>
                             <td ng-bind="t.city_name"></td>
                             <td ng-bind="t.gmt"></td>
-                            <td><ds-widget-clock  show-digital start-time='getgmttime(t.gmt_diff)' gmt-offset="'0'" digital-format="'EEEE MMMM d,yyyy hh:mm:ss a'"></ds-widget-clock></td>
-                            <td style="width:200px;">
-                                <a class='btn btn-default' ng-click="editTimezone(t.id)"><i class='icon icon-pencil'></i> Edit</a>
-                                <a class='btn btn-danger' ng-click="deleteTimezone(t.id)"><i class='icon icon-trash'></i> Delete</a>
-                            </td>
-                        </tr>
-                        <tr ng-show="!Timezones.length"><td colspan="6" style="text-align: center;">No timezones data</td></tr>
+                            <td><ds-widget-clock  show-digital start-time='getGmtTime(t.gmt_diff)' gmt-offset="'0'" digital-format="'EEEE MMMM d,yyyy hh:mm:ss a'"></ds-widget-clock></td>
+                    <td style="width:200px;">
+                        <a class='btn btn-default' ng-click="editTimezone(t.id)"><i class='icon icon-pencil'></i> Edit</a>
+                        <a class='btn btn-danger' ng-click="deleteTimezone(t.id)"><i class='icon icon-trash'></i> Delete</a>
+                    </td>
+                    </tr>
+                    <tr ng-show="!Timezones.length"><td colspan="6" style="text-align: center;">No timezones data</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -84,7 +98,7 @@
         </div>
         <div class="modal-footer">
             <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-            <a class="btn btn-primary" ng-click="saveTimezone()">Save</a>
+            <a class="btn btn-primary" ng-click="saveTimezone(null)">Save</a>
         </div>
     </div>
 </div>

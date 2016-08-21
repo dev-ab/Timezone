@@ -34,11 +34,11 @@ class TimezoneController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function get_timezones(Request $request, $user_id = null) {
+    public function get_timezones(Request $request, $user_id) {
         $user = Auth::user();
 
         // Check if user has permission in case of viewing other users timezones
-        if ($user_id && ($user->hasRole('admin') || $user->can('edit-timezones'))) {
+        if (intval($user_id) && ($user->hasRole('admin') || $user->can('edit-timezones'))) {
             $user = \App\User::findOrFail($user_id);
         }
 
@@ -53,7 +53,7 @@ class TimezoneController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function update_timezone(Request $request, $id, $user_id = null) {
+    public function update_timezone(Request $request, $id, $user_id) {
         $user = Auth::user();
         $timezones = $user->timezones->pluck('id')->toArray();
 
@@ -62,7 +62,7 @@ class TimezoneController extends Controller {
         $data['gmt_diff'] = $data['sign'] . ($data['hour'] * 60 + $data['minute']);
 
         // Add / Update the timezone for the logged in user
-        if ((!$user_id && $id == 'null' ) || in_array($id, $timezones)) {
+        if ((!intval($user_id) && $id == 'null' ) || in_array($id, $timezones)) {
             $timezone = $this->save_timezone($id, $user, $data);
             $gmt_time = (strtotime(gmdate('Y-m-d H:i:s')) ) * 1000;
             return response()->json(compact('timezone', 'gmt_time'));
@@ -98,7 +98,7 @@ class TimezoneController extends Controller {
         $timezone = \App\Timezone::findOrFail($id);
         $timezone->delete();
 
-        return response()->json([]);
+        return response()->json(true);
     }
 
     /**
@@ -107,6 +107,7 @@ class TimezoneController extends Controller {
      * @param integer $id
      * @param App\User $user
      * @param array $data
+     * @return App\Timezone $timezone
      */
     protected function save_timezone($id, $user, $data) {
         if ($id == 'null') {

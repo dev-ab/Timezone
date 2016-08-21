@@ -9,7 +9,7 @@
     <head>
         <!-- Basic -->
         <meta charset="utf-8">
-        <title>Monitor - @yield('title')</title>
+        <title update-title></title>
         <meta name="keywords" content="HTML5 Template" />
         <meta name="description" content="Porto - Responsive HTML5 Template">
         <meta name="author" content="Crivos.com">
@@ -95,6 +95,7 @@
 
         <!-- Libs -->
         <!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>-->
+        <script src="{{url('/')}}/vendor/pace.min.js"></script>
         <script src="{{url('/')}}/vendor/jquery.js"></script>
         <script src="{{url('/')}}/vendor/jquery.easing.js"></script>
         <script src="{{url('/')}}/vendor/jquery.cookie.js"></script>
@@ -106,7 +107,7 @@
         <script src="{{url('/')}}/vendor/jflickrfeed/jflickrfeed.js"></script>
         <script src="{{url('/')}}/vendor/fancybox/jquery.fancybox.js"></script>
         <script src="{{url('/')}}/vendor/jquery.validate.js"></script>
-        <script src="{{url('/')}}/vendor/pace.min.js"></script>
+        <script src="vendor/isotope/jquery.isotope.js"></script>
         <script src="{{url('/')}}/vendor/jquery.noty.packaged.min.js"></script>
 
         <script src="{{url('/')}}/js/plugins.js"></script>

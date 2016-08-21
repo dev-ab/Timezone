@@ -1,22 +1,55 @@
-app.controller('TimezoneController', ['$scope', '$compile', '$window', '$localStorage', '$state', 'Auth',
-    function ($scope, $compile, $window, $localStorage, $state, Auth) {
-        //Check User authenticated
+app.controller('TimezoneController', ['$scope', '$compile', '$window', '$state', 'Auth',
+    function ($scope, $compile, $window, $state, Auth) {
+        //Check User authenticated (to check token expiration on the server)
         Auth.checkAuth(function () {
         }, function () {
             $state.go('root.login');
         });
 
+        //Load Authentication data
+        $scope.authData = Auth.getData();
+
+        //load users data for managing users timezones
+        $scope.user = {};
+        $scope.users = [];
+        $scope.loadUsers = function () {
+            $window.Pace.restart();
+            $.ajax({
+                url: '/get-users',
+                type: 'get',
+                headers: {'Authorization': 'Bearer ' + $scope.authData.token},
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                    $scope.users = data.users;
+                    $scope.$apply();
+                }, error: function (res) {
+                    console.log(res.responseText);
+                }
+            });
+        }
+
+        //Select user to manage timezones for
+        $scope.selectUser = function () {
+            if (!$scope.selectedUser) {
+                $scope.user = {};
+                return;
+            }
+            $scope.user = $scope.users[$scope.selectedUser];
+            $scope.loadTimezones();
+        }
+
         //Loads Timezones Data
         $scope.timezones = {};
         $scope.loadTimezones = function () {
+            $window.Pace.restart();
             $.ajax({
-                url: '/get-timezones',
+                url: '/get-timezones/' + $scope.user.id,
                 type: 'get',
-                headers: {'Authorization': 'Bearer ' + $localStorage.token},
+                headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                 success: function (data) {
                     console.log(JSON.stringify(data));
-                    $scope.timezones = data.timezones;
                     $scope.gmt_time = data.gmt_time;
+                    $scope.timezones = data.timezones;
                     $('#clock').html($compile("<ds-widget-clock class='pull-right' theme='blue-light' show-digital start-time='gmt_time' gmt-offset=\"'0'\" digital-format=\"'EEEE MMMM d,yyyy hh:mm:ss a'\"></ds-widget-clock>")($scope));
                     $scope.$apply();
                 }, error: function (res) {
@@ -27,7 +60,7 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$localSt
         }
 
         //Get time for a certain timezone
-        $scope.getgmttime = function (diff) {
+        $scope.getGmtTime = function (diff) {
             var val = diff * 60 * 1000;
             val += $scope.gmt_time;
             return val;
@@ -58,7 +91,7 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$localSt
             return array;
         }
 
-        //Prepares form data for adding a new timezone
+        //Prepares form data for creating a new timezone
         $scope.addTimezone = function () {
             if (typeof $scope.validator != 'undefined')
                 $scope.validator.resetForm();
@@ -72,7 +105,7 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$localSt
         $scope.editTimezone = function (id) {
             if (typeof $scope.validator != 'undefined')
                 $scope.validator.resetForm();
-            $scope.timezone = $scope.timezones[id];
+            $scope.timezone = angular.copy($scope.timezones[id]);
             var gmt = $scope.convertGmtDiff($scope.timezones[id].gmt_diff);
             $scope.timezone.sign = gmt.sign;
             $scope.timezone.hour = gmt.hour;
@@ -102,52 +135,79 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$localSt
             });
             if (!$('#timezone_form').valid())
                 return;
+            else {
+                $window.Pace.restart();
 
-            $.ajax({
-                url: '/update-timezone/' + $scope.timezone.id,
-                type: 'post',
-                data: $('#timezone_form').serialize(),
-                headers: {'Authorization': 'Bearer ' + $localStorage.token},
-                success: function (data) {
-                    console.log(JSON.stringify(data));
-                    if (data) {
-                        $scope.gmt_time = data.gmt_time;
-                        $scope.timezones[data.timezone.id] = data.timezone;
-                        noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'Timezone saved successfully.'});
-                    } else {
-                        noty({layout: 'topLeft', type: 'error', timeout: 5000, text: 'Timezone information invalid!'});
+                $.ajax({
+                    url: '/update-timezone/' + $scope.timezone.id + '/' + $scope.user.id,
+                    type: 'post',
+                    data: $('#timezone_form').serialize(),
+                    headers: {'Authorization': 'Bearer ' + $scope.authData.token},
+                    success: function (data) {
+                        console.log(JSON.stringify(data));
+                        if (data) {
+                            $scope.gmt_time = data.gmt_time;
+                            if ($scope.timezones.length == 0)
+                                $scope.timezones = {};
+                            $scope.timezones[data.timezone.id] = angular.copy(data.timezone);
+                            $scope.$apply();
+                            noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'Timezone saved successfully.'});
+                        } else {
+                            noty({layout: 'topLeft', type: 'error', timeout: 5000, text: 'Timezone information invalid!'});
+                        }
+                        $('#timezone').modal('toggle');
+                    },
+                    error: function (c) {
+                        console.log(c.responseText);
+                        noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't save the timezone now"});
                     }
-                    $('#timezone').modal('toggle');
-                },
-                error: function (c) {
-                    console.log(c.responseText);
-                    noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't save the timezone now"});
-                }
-            });
+                });
+            }
         }
 
         //Delete a timezone
         $scope.deleteTimezone = function (id) {
-            if (!confirm('Are you sure you want to delete "' + $scope.timezones[id].name + '" timezone?'))
-                return;
-            $.ajax({
-                url: '/delete-timezone/' + id,
-                type: 'get',
-                headers: {'Authorization': 'Bearer ' + $localStorage.token},
-                success: function (data) {
-                    console.log(JSON.stringify(data));
-                    delete $scope.timezones[id];
-                    noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'Timezone deleted successfully.'});
-                },
-                error: function (c) {
-                    console.log(c.responseText);
-                    noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't register user now"});
-                }
+            noty({
+                text: 'Are you sure you want to delete "' + $scope.timezones[id].name + '" timezone?',
+                layout: 'topLeft',
+                type: 'information',
+                buttons: [
+                    {addClass: 'btn btn-danger', text: 'Yes', onClick: function ($noty) {
+                            $noty.close();
+                            $window.Pace.restart();
+                            $.ajax({
+                                url: '/delete-timezone/' + id,
+                                type: 'get',
+                                headers: {'Authorization': 'Bearer ' + $scope.authData.token},
+                                success: function (data) {
+                                    console.log(JSON.stringify(data));
+                                    delete $scope.timezones[id];
+                                    $scope.$apply();
+                                    noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'Timezone deleted successfully.'});
+                                },
+                                error: function (c) {
+                                    console.log(c.responseText);
+                                    noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't deletee timezone now"});
+                                }
+                            });
+                        }
+                    },
+                    {addClass: 'btn btn-default', text: 'No', onClick: function ($noty) {
+                            $noty.close();
+                        }
+                    }
+                ]
             });
         }
 
         //Perform lazy loading of required view data
-        setTimeout(function () {
-            $scope.loadTimezones();
-        }, 1000);
+        if ($state.current.name == 'root.timezone') {
+            setTimeout(function () {
+                $scope.loadUsers();
+            }, 1000);
+        } else {
+            setTimeout(function () {
+                $scope.loadTimezones();
+            }, 1000);
+        }
     }]);
