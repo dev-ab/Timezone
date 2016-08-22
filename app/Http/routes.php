@@ -19,23 +19,29 @@
 Route::get('/', 'TimeZoneController@index');
 
 /*
- * Authentication & Registration Routes
+ * Api routes
  */
-Route::get('check-auth', 'AuthController@check_auth');
-Route::post('login', 'AuthController@login');
-Route::post('register', 'AuthController@register');
-Route::post('check-email', 'AuthController@check_email');
+Route::group(['prefix' => 'api/v1'], function () {
 
-/*
- * Timezone Management Routes 
- */
-Route::get('get-timezones/{id}', 'TimezoneController@get_timezones');
-Route::post('update-timezone/{id}/{user_id}', 'TimezoneController@update_timezone');
-Route::get('delete-timezone/{id}', 'TimezoneController@delete_timezone');
+    /*
+     * Authentication & Registration Routes
+     */
+    Route::get('auth/check', 'AuthController@check_auth');
+    Route::post('auth/login', 'AuthController@login');
+    Route::post('auth/register', 'AuthController@register');
+    Route::post('auth/email', 'AuthController@check_email');
 
-/*
- * User Management Routes
- */
-Route::post('update-user/{id}', 'UserController@update_user');
-Route::get('delete-user/{id}', 'UserController@delete_user');
-Route::get('get-users', 'UserController@get_users');
+    /*
+     * Timezone Management Routes 
+     */
+    Route::get('timezone/get/{id}', 'TimezoneController@get_timezones');
+    Route::post('timezone/update/{id}/{user_id}', 'TimezoneController@update_timezone');
+    Route::get('timezone/delete/{id}', 'TimezoneController@delete_timezone');
+
+    /*
+     * User Management Routes
+     */
+    Route::post('user/update/{id}', 'UserController@update_user');
+    Route::get('user/delete/{id}', 'UserController@delete_user');
+    Route::get('user/get', 'UserController@get_users');
+});

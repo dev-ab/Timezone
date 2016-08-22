@@ -31,6 +31,7 @@
                         <option ng-repeat="u in users" ng-value="u.id" ng-bind="u.name" ng-selected="u.id == selectedUser"></option>
                     </select>
                 </h4>
+                <h4 class="pull-right" ng-show="user.id"><i class="icon icon-user"></i> Managing Timezones for <b ng-bind="user.name"></b></h4>
                 <div ng-show="user.id">
                     <h4><a class="btn btn-success" title="Create a timezone" ng-click="addTimezone()">
                             <i class="icon icon-plus-sign"></i> Create</a></h4>

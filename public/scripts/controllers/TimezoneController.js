@@ -15,15 +15,13 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$state',
         $scope.loadUsers = function () {
             $window.Pace.restart();
             $.ajax({
-                url: '/get-users',
+                url: '/api/v1/user/get',
                 type: 'get',
                 headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                 success: function (data) {
-                    console.log(JSON.stringify(data));
                     $scope.users = data.users;
                     $scope.$apply();
                 }, error: function (res) {
-                    console.log(res.responseText);
                 }
             });
         }
@@ -43,17 +41,15 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$state',
         $scope.loadTimezones = function () {
             $window.Pace.restart();
             $.ajax({
-                url: '/get-timezones/' + $scope.user.id,
+                url: '/api/v1/timezone/get/' + $scope.user.id,
                 type: 'get',
                 headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                 success: function (data) {
-                    console.log(JSON.stringify(data));
                     $scope.gmt_time = data.gmt_time;
                     $scope.timezones = data.timezones;
                     $('#clock').html($compile("<ds-widget-clock class='pull-right' theme='blue-light' show-digital start-time='gmt_time' gmt-offset=\"'0'\" digital-format=\"'EEEE MMMM d,yyyy hh:mm:ss a'\"></ds-widget-clock>")($scope));
                     $scope.$apply();
                 }, error: function (res) {
-                    console.log(res.responseText);
                     $('#clock').html('<span class="pull-right" style="font-size: 14px;color:red;">Failed to load time.</span>');
                 }
             });
@@ -139,12 +135,11 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$state',
                 $window.Pace.restart();
 
                 $.ajax({
-                    url: '/update-timezone/' + $scope.timezone.id + '/' + $scope.user.id,
+                    url: '/api/v1/timezone/update/' + $scope.timezone.id + '/' + $scope.user.id,
                     type: 'post',
                     data: $('#timezone_form').serialize(),
                     headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                     success: function (data) {
-                        console.log(JSON.stringify(data));
                         if (data) {
                             $scope.gmt_time = data.gmt_time;
                             if ($scope.timezones.length == 0)
@@ -158,7 +153,6 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$state',
                         $('#timezone').modal('toggle');
                     },
                     error: function (c) {
-                        console.log(c.responseText);
                         noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't save the timezone now"});
                     }
                 });
@@ -176,17 +170,15 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$state',
                             $noty.close();
                             $window.Pace.restart();
                             $.ajax({
-                                url: '/delete-timezone/' + id,
+                                url: '/api/v1/timezone/delete/' + id,
                                 type: 'get',
                                 headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                                 success: function (data) {
-                                    console.log(JSON.stringify(data));
                                     delete $scope.timezones[id];
                                     $scope.$apply();
                                     noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'Timezone deleted successfully.'});
                                 },
                                 error: function (c) {
-                                    console.log(c.responseText);
                                     noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't deletee timezone now"});
                                 }
                             });

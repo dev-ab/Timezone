@@ -1,0 +1,54 @@
+<div role="main" class="main">
+    <section class="page-top">
+        <div class="container">
+            <div class="row">
+                <div class="span12">
+                    <ul class="breadcrumb">
+                        <li><a ui-sref="root.home">Home</a> <span class="divider">/</span></li>
+                        <li class="active">My Account</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="span12">
+                    <h2><i class="icon icon-info-sign"></i> My Account</h2>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <h4><i class="icon icon-info-sign"></i> Account Info</h4>
+        <div class='row'>
+            <div class="span12">
+                <form id='user_form' ng-submit="saveUser()">
+                    <div class="row controls">
+                        <div class="span12 control-group">
+                            <input type="text" ng-model='user.name' name='name' placeholder="User name" class="span4">
+                        </div>
+                        <div class="span12 control-group">
+                            <input id='email' type="email" ng-model='user.email' name='email' placeholder="Email address" class="span4">
+                        </div>
+                        <div class="span12 control-group">
+                            <input type="password" ng-model="user.password" name='password' placeholder="New Password" class="span4">
+                        </div>
+                        <div class="span12 control-group">
+                            <input type="password" name='confirm_password' placeholder="Confirm Password" class="span4">
+                        </div>
+                        <div class="span6 control-group">
+                            <img id="image" style='height:150px;' src="{{user.img || '/img/avatar.jpg'}}" ><br><br>
+                            <h6 ng-bind=""></h6>
+                            <label class="btn btn-info btn-file">
+                                Choose Image <input id="file" type="file" onchange="angular.element(this).scope().changeImg(this)"  name="img" style="display: none;">
+                            </label>
+                            <hr>
+                        </div>
+                        <div class="span12 offset2 control-group">
+                            <button class="btn btn-primary" class="span2">Save Info</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

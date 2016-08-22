@@ -32,7 +32,7 @@ app.controller('AuthController', ['$scope', '$window', '$localStorage', '$locati
                         required: true,
                         email: true,
                         remote: {
-                            url: "/check-email",
+                            url: "/api/v1/auth/email",
                             type: "post",
                             data: {
                                 email: function () {

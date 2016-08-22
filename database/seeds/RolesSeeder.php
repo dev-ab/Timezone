@@ -12,26 +12,26 @@ class RolesSeeder extends Seeder {
      * @return void
      */
     public function run() {
+        //Create admin role
         $admin = Role::create([
                     'name' => 'admin',
                     'display_name' => 'User Administrator',
-                    'description' => 'User is allowed to manage and edit other users'
+                    'description' => 'User is allowed to manage and edit all records and users'
         ]);
-
-
-        $createPost = new Permission();
-        $createPost->name = 'edit-user';
-        $createPost->display_name = 'Create Posts'; // optional
-        $createPost->description = 'create new blog posts'; // optional
-        $createPost->save();
-
-        $editUser = Permission::create([
-                    'name' => 'edit-users',
-                    'display_name' => 'Edit Users',
-                    'description' => 'Edit existing users'
+        
+        //Create user manager role
+        $userManager = Role::create([
+                    'name' => 'user-manager',
+                    'display_name' => 'User Manager',
+                    'description' => 'User is allowed to manage and edit unprivileged users'
         ]);
-
-        $admin->attachPermission([$editUser]);
+        
+        //Create user role
+        $user = Role::create([
+                    'name' => 'user',
+                    'display_name' => 'User',
+                    'description' => 'User is allowed to manage and edit his own records'
+        ]);
     }
 
 }

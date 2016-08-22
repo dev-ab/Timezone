@@ -130,6 +130,7 @@
         <script src="{{url('/')}}/scripts/controllers/AuthController.js"></script>
         <script src="{{url('/')}}/scripts/controllers/TimezoneController.js"></script>
         <script src="{{url('/')}}/scripts/controllers/UserController.js"></script>
+        <script src="{{url('/')}}/scripts/controllers/AccountController.js"></script>
         @yield('controller')
 
         <!-- Google Analytics: Change UA-XXXXX-X to be your site's ID. Go to http://www.google.com/analytics/ for more information. -->

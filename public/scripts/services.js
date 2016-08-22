@@ -7,15 +7,13 @@ app.service('Auth', ['$rootScope', '$localStorage', '$state', function ($rootSco
             checkAuth: function (success, error) {
                 Pace.restart();
                 $.ajax({
-                    url: '/check-auth',
+                    url: '/api/v1/auth/check',
                     type: 'get',
                     headers: {'Authorization': 'Bearer ' + $localStorage.token},
                     success: function (data) {
-                        console.log(JSON.stringify(data));
                         success();
                     },
                     error: function (c) {
-                        console.log(c.responseText);
                         delete $localStorage.token;
                         delete $localStorage.user;
                         delete $localStorage.roles;
@@ -28,11 +26,10 @@ app.service('Auth', ['$rootScope', '$localStorage', '$state', function ($rootSco
             login: function (credentials) {
                 Pace.restart();
                 $.ajax({
-                    url: '/login',
+                    url: '/api/v1/auth/login',
                     type: 'post',
                     data: credentials,
                     success: function (data) {
-                        console.log(JSON.stringify(data));
                         $localStorage.token = data.token;
                         $localStorage.user = data.user;
                         $localStorage.roles = data.roles;
@@ -41,7 +38,6 @@ app.service('Auth', ['$rootScope', '$localStorage', '$state', function ($rootSco
                         $state.go('root.home');
                     },
                     error: function (c) {
-                        console.log(c.responseText);
                         noty({layout: 'topLeft', type: 'error', timeout: 5000, text: 'Wrong credentials'});
                     }
                 });
@@ -50,11 +46,10 @@ app.service('Auth', ['$rootScope', '$localStorage', '$state', function ($rootSco
             register: function (userData) {
                 Pace.restart();
                 $.ajax({
-                    url: '/register',
+                    url: '/api/v1/auth/register',
                     type: 'post',
                     data: userData,
                     success: function (data) {
-                        console.log(JSON.stringify(data));
                         if (data) {
                             noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'Registered successfully'});
                             $state.go('root.login');
@@ -64,7 +59,6 @@ app.service('Auth', ['$rootScope', '$localStorage', '$state', function ($rootSco
 
                     },
                     error: function (c) {
-                        console.log(c.responseText);
                         noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't register user now"});
                     }
                 });
@@ -81,6 +75,12 @@ app.service('Auth', ['$rootScope', '$localStorage', '$state', function ($rootSco
             //Get the authentication data
             getData: function () {
                 return authData;
-            }
+            },
+            //Set user data
+            setUserData: function (user) {
+                authData = {};
+                $localStorage.user = user;
+                authData = {token: $localStorage.token, user: $localStorage.user, roles: $localStorage.roles};
+            },
         };
     }]);

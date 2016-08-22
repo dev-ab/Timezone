@@ -64,12 +64,12 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
                 })
                 //Set up profile route and controller
                 .state('root.account', {
-                    url: '/profile',
-                    data: {pageTitle: 'Timezone - Profile'},
+                    url: '/account',
+                    data: {pageTitle: 'Timezone - My Account'},
                     views: {
                         'container@': {
-                            templateUrl: 'partials/profile.html',
-                            controller: 'TimezoneController',
+                            templateUrl: 'partials/account.html',
+                            controller: 'AccountController',
                         }
                     }
                 })

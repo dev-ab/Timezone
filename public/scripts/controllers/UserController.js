@@ -14,16 +14,15 @@ app.controller('UserController', ['$scope', '$window', '$state', 'Auth',
         $scope.loadUsers = function () {
             $window.Pace.restart();
             $.ajax({
-                url: '/get-users',
+                url: '/api/v1/user/get',
                 type: 'get',
                 headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                 success: function (data) {
-                    console.log(JSON.stringify(data));
                     $scope.users = data.users;
                     $scope.roles = data.roles;
                     $scope.$apply();
                 }, error: function (res) {
-                    console.log(res.responseText);
+                    //console.log(res.responseText);
                 }
             });
         }
@@ -64,7 +63,7 @@ app.controller('UserController', ['$scope', '$window', '$state', 'Auth',
                         required: true,
                         email: true,
                         remote: {
-                            url: "/check-email",
+                            url: "/api/v1/auth/email",
                             type: "POST",
                             data: {
                                 email: function () {
@@ -94,12 +93,11 @@ app.controller('UserController', ['$scope', '$window', '$state', 'Auth',
             else {
                 $window.Pace.restart();
                 $.ajax({
-                    url: '/update-user/' + $scope.cur_user.id,
+                    url: '/api/v1/user/update/' + $scope.cur_user.id,
                     type: 'post',
                     data: $('#user_form').serialize(),
                     headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                     success: function (data) {
-                        console.log(JSON.stringify(data));
                         if (data) {
                             if ($scope.users.length == 0)
                                 $scope.users = {};
@@ -112,7 +110,6 @@ app.controller('UserController', ['$scope', '$window', '$state', 'Auth',
                         $('#user').modal('toggle');
                     },
                     error: function (c) {
-                        console.log(c.responseText);
                         noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't save the user now"});
                     }
                 });
@@ -130,17 +127,15 @@ app.controller('UserController', ['$scope', '$window', '$state', 'Auth',
                             $noty.close();
                             $window.Pace.restart();
                             $.ajax({
-                                url: '/delete-user/' + id,
+                                url: '/api/v1/user/delete/' + id,
                                 type: 'get',
                                 headers: {'Authorization': 'Bearer ' + $scope.authData.token},
                                 success: function (data) {
-                                    console.log(JSON.stringify(data));
                                     delete $scope.users[id];
                                     $scope.$apply();
                                     noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'User deleted successfully.'});
                                 },
                                 error: function (c) {
-                                    console.log(c.responseText);
                                     noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't delete user now"});
                                 }
                             });
