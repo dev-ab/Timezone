@@ -25,7 +25,7 @@ class AuthController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function check_auth(Request $request) {
-        return response()->json(true);
+        return response()->json(['authenticated' => true]);
     }
 
     /**
@@ -37,13 +37,14 @@ class AuthController extends Controller {
         $credentials = $request->only('email', 'password');
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(false, 401);
+            return response()->json(['authenticated' => false], 401);
         }
 
         $user = Auth::user();
         $roles = $user->roles->pluck('name');
+        $authenticated = true;
 
-        return response()->json(compact('token', 'user', 'roles'));
+        return response()->json(compact('authenticated', 'token', 'user', 'roles'));
     }
 
     /**
@@ -56,13 +57,13 @@ class AuthController extends Controller {
         $validator = $this->validator($user_data);
 
         if ($validator->fails())
-            return response()->json(false);
+            return response()->json(['registered' => false]);
 
         $user_data['password'] = bcrypt($user_data['password']);
         $user = \App\User::create($user_data);
         $user->roles()->attach(\App\Role::where('name', 'user')->get()[0]->id);
 
-        return response()->json(true);
+        return response()->json(['registered' => true]);
     }
 
     /**

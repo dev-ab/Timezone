@@ -65,7 +65,8 @@ class TimezoneController extends Controller {
         if ((!intval($user_id) && $id == 'null' ) || in_array($id, $timezones)) {
             $timezone = $this->save_timezone($id, $user, $data);
             $gmt_time = (strtotime(gmdate('Y-m-d H:i:s')) ) * 1000;
-            return response()->json(compact('timezone', 'gmt_time'));
+            $updated = true;
+            return response()->json(compact('updated', 'timezone', 'gmt_time'));
         }
 
 
@@ -75,9 +76,10 @@ class TimezoneController extends Controller {
             $user = \App\User::findOrFail($user_id);
             $timezone = $this->save_timezone($id, $user, $data);
             $gmt_time = (strtotime(gmdate('Y-m-d H:i:s')) ) * 1000;
-            return response()->json(compact('timezone', 'gmt_time'));
+            $updated = true;
+            return response()->json(compact('updated', 'timezone', 'gmt_time'));
         } else {
-            return response()->json(['error' => 'unauthorized action'], 401);
+            return response()->json(['updated' => false, 'error' => 'unauthorized action'], 401);
         }
     }
 
@@ -92,13 +94,13 @@ class TimezoneController extends Controller {
 
         //Check if user has permission in case of editting other users timezones
         if (!in_array($id, $timezones) && !$user->hasRole('admin')) {
-            return response()->json(['error' => 'unauthorized action'], 401);
+            return response()->json(['deleted' => false, 'error' => 'unauthorized action'], 401);
         }
 
         $timezone = \App\Timezone::findOrFail($id);
         $timezone->delete();
 
-        return response()->json(true);
+        return response()->json(['deleted' => true]);
     }
 
     /**

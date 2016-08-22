@@ -37,11 +37,12 @@ class UserController extends Controller {
                     })->get()->keyBy('id');
             $roles = \App\Role::whereNotIn('name', ['admin', 'user-manager'])->get();
         } else {
-            return response()->json(['error' => 'unauthorized action'], 401);
+            return response()->json(['authorized' => false, 'error' => 'unauthorized action'], 401);
         }
 
         //Return the retrieved users
-        return response()->json(compact('users', 'roles'));
+        $authorized = true;
+        return response()->json(compact('authorized', 'users', 'roles'));
     }
 
     /**
@@ -58,8 +59,9 @@ class UserController extends Controller {
             $user = \App\User::findOrFail($id);
         } else if ($authUser->hasRole(['admin', 'user-manager'])) {
             $user = $this->save_user('null', $request->all());
+            $updated = true;
             //Return the saved user
-            return response()->json(compact('user'));
+            return response()->json(compact('updated', 'user'));
         }
 
         //Check authenticated user role
@@ -68,10 +70,11 @@ class UserController extends Controller {
                 $authUser->id == $id) {
 
             $user = $this->save_user($id, $request->all());
+            $updated = true;
             //Return the saved user
-            return response()->json(compact('user'));
+            return response()->json(compact('updated', 'user'));
         } else {
-            return response()->json(['error' => 'unauthorized action'], 401);
+            return response()->json(['updated' => false, 'error' => 'unauthorized action'], 401);
         }
     }
 
@@ -94,9 +97,9 @@ class UserController extends Controller {
             $user->roles()->sync([]);
             $user->delete();
 
-            return response()->json(true);
+            return response()->json(['deleted' => true]);
         } else {
-            return response()->json(['error' => 'unauthorized action'], 401);
+            return response()->json(['deleted' => false, 'error' => 'unauthorized action'], 401);
         }
     }
 
