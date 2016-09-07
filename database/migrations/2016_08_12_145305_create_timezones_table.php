@@ -20,7 +20,7 @@ class CreateTimezonesTable extends Migration {
 
             $table->string('name');
             $table->string('city_name');
-            $table->smallInteger('gmt_diff')->unsigned();
+            $table->smallInteger('gmt_diff');
             $table->timestamps();
         });
     }

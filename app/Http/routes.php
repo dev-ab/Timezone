@@ -44,4 +44,6 @@ Route::group(['prefix' => 'api/v1'], function () {
     Route::post('user/update/{id}', 'UserController@update_user');
     Route::get('user/delete/{id}', 'UserController@delete_user');
     Route::get('user/get', 'UserController@get_users');
+    
+    Route::post('csv', 'TimezoneController@csv_file');
 });

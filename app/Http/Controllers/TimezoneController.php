@@ -29,6 +29,19 @@ class TimezoneController extends Controller {
         return view('home');
     }
 
+    public function csv_file(Request $request) {
+        $csv = $request->file('csv');
+        $res = fopen($csv->path(), 'r+');
+        $fields = fgetcsv($res, 1000, "\t");
+        while (!feof($res)) {
+            $data = fgetcsv($res, 1000, "\t");
+            if ($data)
+                $csv_data[] = $data;
+        }
+        fclose($res);
+        return response()->json(['fields' => $fields, 'csv' => $csv_data]);
+    }
+
     /**
      * Get the timezones data from the database.
      *

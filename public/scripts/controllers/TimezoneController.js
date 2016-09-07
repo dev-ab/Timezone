@@ -6,6 +6,37 @@ app.controller('TimezoneController', ['$scope', '$compile', '$window', '$state',
             $state.go('root.login');
         });
 
+
+        //Handle CSV file
+        $scope.handleCsv = function () {
+            var form = $('form')[0];
+            var data = new FormData(form);
+            data.append('csv', $('#file')[0].files[0]);
+            $window.Pace.restart();
+            $.ajax({
+                url: '/api/v1/csv',
+                type: 'post',
+                processData: false,
+                contentType: false,
+                data: data,
+                headers: {'Authorization': 'Bearer ' + $scope.authData.token},
+                success: function (data) {
+                    console.log(JSON.stringify(data));
+                    $scope.csv_data = data.csv;
+                    $scope.fields = data.fields;
+                    $scope.$apply();
+                    noty({layout: 'topLeft', type: 'success', timeout: 5000, text: 'Timezone saved successfully.'});
+                },
+                error: function (c) {
+                    console.log(JSON.stringify(c.responseText));
+                    noty({layout: 'topLeft', type: 'error', timeout: 5000, text: "Server can't save the timezone now"});
+                }
+            });
+        }
+
+
+
+
         //Load Authentication data
         $scope.authData = Auth.getData();
 

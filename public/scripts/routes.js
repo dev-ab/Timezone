@@ -94,5 +94,16 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
                             controller: 'UserController'
                         }
                     }
+                })
+                //Try CSV Files Handling
+                .state('root.csv', {
+                    url: '/manage-csv',
+                    data: {pageTitle: 'Timezone - CSV Files'},
+                    views: {
+                        'container@': {
+                            templateUrl: 'partials/csv.html',
+                            controller: 'TimezoneController'
+                        }
+                    }
                 });
     }]);
